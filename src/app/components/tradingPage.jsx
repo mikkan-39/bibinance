@@ -1,33 +1,37 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useGetTradingCoinsQuery } from "../api/api";
+import Roller from "./roller";
 
 export default function TradingPage() {
-  const data = [
-    {
-      id: "1",
-      title: "First Item",
-    },
-    {
-      id: "2",
-      title: "Second Item",
-    },
-    {
-      id: "3",
-      title: "Third Item",
-    },
-  ];
+  const { data, error, isLoading, refetch } = useGetTradingCoinsQuery({});
+
+  useEffect(() => {
+    if (data) console.log(data[0]);
+  }, [data, error, isLoading]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
   const Header = () => {
     return (
       <View style={styles.headerView}>
         <Text style={styles.sectionLabel}>Популярное</Text>
-        <FlatList
-          style={styles.roller}
-          horizontal={true}
-          contentContainerStyle={styles.rollerContent}
-          data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={(item) => <View style={styles.miniCoin} />}
-        />
+        <Roller />
         <Text style={styles.sectionLabel}>Все криптовалюты</Text>
+        {!data && (
+          <ActivityIndicator style={[styles.card, { marginTop: 15 }]} />
+        )}
       </View>
     );
   };
@@ -38,7 +42,11 @@ export default function TradingPage() {
         data={data}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={Header}
-        renderItem={(item) => <View style={styles.card} />}
+        renderItem={(item) => (
+          <View style={styles.card}>
+            <Text>{item.item.id}</Text>
+          </View>
+        )}
       />
     </View>
   );
@@ -60,23 +68,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontFamily: "System",
   },
-  roller: {
-    margin: 10,
-    height: 50,
-    borderRadius: 15,
-    backgroundColor: "#fff",
-  },
-  rollerContent: { alignItems: "stretch" },
   card: {
     height: 100,
     marginBottom: 15,
     borderRadius: 15,
     backgroundColor: "#fff",
-  },
-  miniCoin: {
-    width: 75,
-    margin: 10,
-    backgroundColor: "#999",
-    borderRadius: 5,
+    padding: 10,
+    alignContent: "center",
+    justifyContent: "center",
   },
 });

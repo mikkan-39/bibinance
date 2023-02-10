@@ -11,6 +11,7 @@ export default function StackNavigator() {
         name="TradingPage"
         component={TradingPage}
         options={{
+          title: "Курсы",
           headerRight: () => SubscribeButton(),
         }}
       />
