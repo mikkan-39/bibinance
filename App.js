@@ -6,6 +6,10 @@ import "react-native-gesture-handler";
 import StackNavigator from "./src/app/navigator";
 import * as Notifications from "expo-notifications";
 
+if (__DEV__) {
+  import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
+}
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
