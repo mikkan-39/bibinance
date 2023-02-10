@@ -25,7 +25,6 @@ export default function TradingPage() {
           contentContainerStyle={styles.rollerContent}
           data={data}
           keyExtractor={(item) => item.id}
-          ListHeaderComponent={Header}
           renderItem={(item) => <View style={styles.miniCoin} />}
         />
         <Text style={styles.sectionLabel}>Все криптовалюты</Text>

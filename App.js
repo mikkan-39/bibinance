@@ -4,6 +4,15 @@ import { store } from "./src/app/store";
 import { NavigationContainer } from "@react-navigation/native";
 import "react-native-gesture-handler";
 import StackNavigator from "./src/app/navigator";
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
   return (
