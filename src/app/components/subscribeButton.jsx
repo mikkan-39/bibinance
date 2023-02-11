@@ -17,9 +17,7 @@ export default SubscribeButton = () => {
               text: "Хочу",
               isPreferred: true,
               onPress: () => {
-                registerForPushNotificationsAsync().then((token) =>
-                  console.log(token)
-                );
+                registerForPushNotificationsAsync();
               },
             },
           ]

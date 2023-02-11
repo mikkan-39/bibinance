@@ -7,14 +7,11 @@ import {
   View,
 } from "react-native";
 import { useGetTradingCoinsQuery } from "../api/api";
+import CoinCard from "./coinCard";
 import Roller from "./roller";
 
 export default function TradingPage() {
-  const { data, error, isLoading, refetch } = useGetTradingCoinsQuery({});
-
-  useEffect(() => {
-    if (data) console.log(data[0]);
-  }, [data, error, isLoading]);
+  const { data, error, refetch } = useGetTradingCoinsQuery({});
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,6 +19,8 @@ export default function TradingPage() {
     }, 15000);
     return () => clearInterval(interval);
   }, []);
+
+  if (error) return <Text style={styles.sectionLabel}>Произошла ошибка.</Text>;
 
   const Header = () => {
     return (
@@ -39,14 +38,10 @@ export default function TradingPage() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
+        data={data && Object.keys(data)}
+        keyExtractor={(coin) => coin}
         ListHeaderComponent={Header}
-        renderItem={(item) => (
-          <View style={styles.card}>
-            <Text>{item.item.id}</Text>
-          </View>
-        )}
+        renderItem={(coin) => <CoinCard coin={coin} />}
       />
     </View>
   );

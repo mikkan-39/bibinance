@@ -10,17 +10,7 @@ export const api = createApi({
     }),
     getTradingCoins: builder.query({
       query: () => `/-trading-/api/trading`,
-      transformResponse: (response, meta, arg) => {
-        const keys = Object.keys(response.content);
-        var res = [];
-        for (const key of keys) {
-          res.push({
-            id: key,
-            ...response.content[key],
-          });
-        }
-        return res;
-      },
+      transformResponse: (response, meta, arg) => response.content,
     }),
     getPopularCoins: builder.query({
       query: () => `/-trading-/api/trading_popular_courses`,
