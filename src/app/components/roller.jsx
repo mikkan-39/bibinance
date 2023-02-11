@@ -13,7 +13,7 @@ import IconComponent from "./iconComponent";
 
 function getPercent(data) {
   if (!data?.cg?.price?.USDT) return "~";
-  return data.cg.price.USDT + "$";
+  return +parseFloat(data.cg.price.USDT).toFixed(2) + "$";
 }
 
 export default Roller = () => {

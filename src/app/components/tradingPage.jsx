@@ -41,7 +41,9 @@ export default function TradingPage() {
         data={data && Object.keys(data)}
         keyExtractor={(coin) => coin}
         ListHeaderComponent={Header}
-        renderItem={(coin) => <CoinCard coin={coin} />}
+        renderItem={(coin) => (
+          <CoinCard coinName={coin.item} pressable={true} />
+        )}
       />
     </View>
   );

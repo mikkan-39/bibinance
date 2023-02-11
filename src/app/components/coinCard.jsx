@@ -4,23 +4,24 @@ import numeral from "numeral";
 import IconComponent from "./iconComponent";
 import { useNavigation } from "@react-navigation/native";
 
-export default function CoinCard({ coin }) {
+export default function CoinCard({ coinName, pressable }) {
   const navigation = useNavigation();
   const { coinData } = useGetTradingCoinsQuery(undefined, {
-    selectFromResult: ({ data }) => ({ coinData: data && data[coin.item].cg }),
+    selectFromResult: ({ data }) => ({ coinData: data && data[coinName].cg }),
   });
 
   if (!coinData) return null;
   return (
     <Pressable
-      onPress={() => navigation.navigate("CoinPage", { coinName: coin.item })}
+      disabled={!pressable}
+      onPress={() => navigation.navigate("CoinPage", { coinName: coinName })}
       style={styles.card}
     >
-      <IconComponent coinName={coin.item} />
+      <IconComponent coinName={coinName} />
       <View style={styles.dataColumn}>
         <View style={styles.dataRow}>
           <Text style={styles.label}>
-            {coin.item + priceWrap(coinData.price.USDT)}
+            {coinName + priceWrap(coinData.price.USDT)}
           </Text>
           <Text style={styles.cap}>
             {"Cap: " + capWrap(coinData.market_cap.USDT)}
@@ -28,6 +29,9 @@ export default function CoinCard({ coin }) {
         </View>
 
         <View style={styles.dataRow}>
+          <Text
+            style={[styles.cardColumn, { flexShrink: 1, margin: 0 }]}
+          ></Text>
           <Text style={styles.cardColumn}>
             {"1h:\n"}
             {cText(numWrap(coinData["1h"]))}
@@ -98,5 +102,6 @@ const styles = StyleSheet.create({
   },
   cardColumn: {
     flex: 1,
+    marginHorizontal: 5,
   },
 });

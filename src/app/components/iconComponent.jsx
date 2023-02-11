@@ -33,8 +33,7 @@ const styles = StyleSheet.create({
   iconPlaceholder: {
     height: "100%",
     aspectRatio: 1,
-    borderColor: "#333",
-    borderWidth: 1,
+    backgroundColor: "#aaa",
     borderRadius: 5,
     marginRight: 20,
   },

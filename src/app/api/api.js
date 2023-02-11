@@ -23,6 +23,19 @@ export const api = createApi({
       query: () => `${tradingPort}/api/coins_imgs`,
       transformResponse: (response, meta, arg) => response.content,
     }),
+    getChartData: builder.query({
+      query: ({ starttime, endtime, ticker }) => ({
+        url: `-clicks-/api/ticker`,
+        params: {
+          starttime,
+          endtime,
+          ticker,
+          period: "1h",
+          context: "USD",
+        },
+      }),
+      transformResponse: (response, meta, arg) => response.data,
+    }),
   }),
 });
 
@@ -31,4 +44,5 @@ export const {
   useGetTradingCoinsQuery,
   useGetPopularCoinsQuery,
   useGetIconLinksQuery,
+  useGetChartDataQuery,
 } = api;

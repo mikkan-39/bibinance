@@ -6,6 +6,7 @@ import "react-native-gesture-handler";
 import StackNavigator from "./src/app/navigator";
 import * as Notifications from "expo-notifications";
 import { api } from "./src/app/api/api";
+import { StatusBar } from "expo-status-bar";
 
 if (__DEV__) {
   import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
@@ -28,6 +29,7 @@ export default function App() {
       <NavigationContainer>
         <StackNavigator />
       </NavigationContainer>
+      <StatusBar style="auto" />
     </Provider>
   );
 }
