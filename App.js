@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import "react-native-gesture-handler";
 import StackNavigator from "./src/app/navigator";
 import * as Notifications from "expo-notifications";
+import { api } from "./src/app/api/api";
 
 if (__DEV__) {
   import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
@@ -19,6 +20,9 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+  store.dispatch(
+    api.util.prefetch("getIconLinks", undefined, { force: false })
+  );
   return (
     <Provider store={store}>
       <NavigationContainer>

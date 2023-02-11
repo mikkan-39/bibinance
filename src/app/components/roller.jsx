@@ -1,12 +1,15 @@
+import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { useGetPopularCoinsQuery, useGetTradingCoinsQuery } from "../api/api";
+import IconComponent from "./iconComponent";
 
 function getPercent(data) {
   if (!data?.cg?.price?.USDT) return "~";
@@ -14,6 +17,7 @@ function getPercent(data) {
 }
 
 export default Roller = () => {
+  const navigation = useNavigation();
   const { data: popularCoins, error: e1 } = useGetPopularCoinsQuery();
   const { data: coinsData, error: e2 } = useGetTradingCoinsQuery();
 
@@ -29,13 +33,18 @@ export default Roller = () => {
         // Да, так при любом чихе в данных все карточки рендерятся,
         // но в любом случае мы обновляем курс всех валют разом.
         renderItem={(coin) => (
-          <View style={styles.miniCoin}>
-            <View style={styles.icon} />
+          <Pressable
+            onPress={() =>
+              navigation.navigate("CoinPage", { coinName: coin.item.symbol })
+            }
+            style={styles.miniCoin}
+          >
+            <IconComponent coinName={coin.item.symbol} style={styles.icon} />
             <View style={styles.textWrap}>
               <Text>{coin.item.symbol}</Text>
               <Text>{getPercent(coinsData[coin.item.symbol])}</Text>
             </View>
-          </View>
+          </Pressable>
         )}
       />
     );
@@ -66,9 +75,8 @@ const styles = StyleSheet.create({
   icon: {
     minWidth: 40,
     height: 40,
-    borderColor: "#333",
-    borderWidth: 1,
     marginRight: 5,
+    borderRadius: 0,
   },
   textWrap: {
     alignItems: "flex-start",

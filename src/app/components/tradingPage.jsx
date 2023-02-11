@@ -11,7 +11,7 @@ import CoinCard from "./coinCard";
 import Roller from "./roller";
 
 export default function TradingPage() {
-  const { data, error, refetch } = useGetTradingCoinsQuery({});
+  const { data, error, refetch } = useGetTradingCoinsQuery();
 
   useEffect(() => {
     const interval = setInterval(() => {

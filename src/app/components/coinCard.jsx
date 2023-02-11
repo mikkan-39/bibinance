@@ -1,16 +1,22 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useGetTradingCoinsQuery } from "../api/api";
 import numeral from "numeral";
+import IconComponent from "./iconComponent";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CoinCard({ coin }) {
+  const navigation = useNavigation();
   const { coinData } = useGetTradingCoinsQuery(undefined, {
     selectFromResult: ({ data }) => ({ coinData: data && data[coin.item].cg }),
   });
 
   if (!coinData) return null;
   return (
-    <View style={styles.card}>
-      <View style={styles.icon} />
+    <Pressable
+      onPress={() => navigation.navigate("CoinPage", { coinName: coin.item })}
+      style={styles.card}
+    >
+      <IconComponent coinName={coin.item} />
       <View style={styles.dataColumn}>
         <View style={styles.dataRow}>
           <Text style={styles.label}>
@@ -23,17 +29,26 @@ export default function CoinCard({ coin }) {
 
         <View style={styles.dataRow}>
           <Text style={styles.cardColumn}>
-            {"1h:\n" + numWrap(coinData["1h"])}
+            {"1h:\n"}
+            {cText(numWrap(coinData["1h"]))}
           </Text>
           <Text style={styles.cardColumn}>
-            {"24h:\n" + numWrap(coinData["24h"])}
+            {"24h:\n"}
+            {cText(numWrap(coinData["24h"]))}
           </Text>
           <Text style={styles.cardColumn}>
-            {"7d:\n" + numWrap(coinData["7d"])}
+            {"7d:\n"}
+            {cText(numWrap(coinData["7d"]))}
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
+  );
+}
+
+function cText(str) {
+  return (
+    <Text style={{ color: str && str[0] == "+" ? "green" : "red" }}>{str}</Text>
   );
 }
 
@@ -80,14 +95,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  icon: {
-    height: "100%",
-    aspectRatio: 1,
-    borderColor: "#333",
-    borderWidth: 1,
-    borderRadius: 5,
-    marginRight: 20,
   },
   cardColumn: {
     flex: 1,
