@@ -14,11 +14,10 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mikkan.bibinance"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e0632e2f-b841-45b6-9902-71675fda974a"
+      }
+    },
+    "plugins": [["react-native-appsflyer", {}]]
   }
 }
