@@ -14,6 +14,11 @@ export default function StackNavigator() {
         options={{
           title: "Курсы",
           headerRight: () => SubscribeButton(),
+          headerStyle: {
+            shadowColor: "#999",
+            shadowRadius: 10,
+            shadowOpacity: 0.5,
+          },
         }}
       />
       <Stack.Screen

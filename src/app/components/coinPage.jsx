@@ -1,4 +1,10 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import CoinCard from "./coinCard";
 import { CandlestickChart } from "react-native-wagmi-charts";
 import { useGetChartDataQuery } from "../api/api";
@@ -23,6 +29,8 @@ function Chart({ coinName }) {
   });
   const [endtime, setEndtime] = useState(new Date().getTime());
 
+  const { width, height } = useWindowDimensions();
+
   const { data, isLoading, error } = useGetChartDataQuery({
     starttime,
     endtime,
@@ -33,20 +41,39 @@ function Chart({ coinName }) {
 
   // Вообще надо бы менять интервал, но кроме 1 часа я рабочих не нашел.
   // С данными на целый месяц все тормозит.
-  const chartData = Object.entries(data).map(([timestamp, item]) => ({
-    timestamp,
-    ...item,
-  }));
+  var topPrice = 0;
+  var minPrice = Infinity;
+  const chartData = Object.entries(data).map(([timestamp, item]) => {
+    topPrice = Math.max(topPrice, item.high);
+    minPrice = Math.min(minPrice, item.low);
+    return {
+      timestamp,
+      ...item,
+    };
+  });
 
   return (
     <CandlestickChart.Provider data={chartData}>
       <CandlestickChart height={400} style={styles.chart}>
-        <CandlestickChart.Candles />
-        <View style={styles.dateLabelContainer}>
-          <Text style={styles.date}>
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.priceLabelContainer}>
+            <Text style={styles.label}>{topPrice.toFixed()}</Text>
+            <Text style={styles.label}>{minPrice.toFixed()}</Text>
+          </View>
+          <CandlestickChart.Candles
+            width={width - styles.priceLabelContainer.width}
+          />
+        </View>
+        <View
+          style={[
+            styles.dateLabelContainer,
+            { width: width - styles.priceLabelContainer.width },
+          ]}
+        >
+          <Text style={styles.label}>
             {new Date(starttime).toLocaleDateString("ru-RU")}
           </Text>
-          <Text style={styles.date}>
+          <Text style={styles.label}>
             {new Date(endtime).toLocaleDateString("ru-RU")}
           </Text>
         </View>
@@ -55,6 +82,7 @@ function Chart({ coinName }) {
   );
 }
 
+const labelWidth = 50;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
@@ -65,18 +93,31 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
-    height: 430,
+    height: 400 + labelWidth,
     marginBottom: 15,
+  },
+  priceLabelContainer: {
+    width: labelWidth,
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderColor: "#fff",
+    borderRightColor: "#ddd",
+    borderWidth: 2,
   },
   dateLabelContainer: {
     position: "absolute",
-    bottom: 10,
-    width: "100%",
+    bottom: 0,
+    height: labelWidth,
+    marginLeft: labelWidth,
     paddingHorizontal: 10,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
+    borderColor: "#fff",
+    borderTopColor: "#ddd",
+    borderWidth: 2,
   },
-  date: {
+  label: {
     fontWeight: "bold",
   },
 });
