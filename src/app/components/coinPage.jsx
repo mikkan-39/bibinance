@@ -9,24 +9,24 @@ import CoinCard from "./coinCard";
 import { CandlestickChart } from "react-native-wagmi-charts";
 import { useGetChartDataQuery } from "../api/api";
 import { useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import appsFlyer from "react-native-appsflyer";
+// import { useFocusEffect } from "@react-navigation/native";
+// import appsFlyer from "react-native-appsflyer";
 
 export default CoinPage = ({ route }) => {
   const { coinName } = route.params;
 
-  useFocusEffect(() => {
-    appsFlyer.logEvent(
-      "Navigate to " + coinName,
-      {},
-      (res) => {
-        console.log(res);
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  });
+  // useFocusEffect(() => {
+  //   appsFlyer.logEvent(
+  //     "Navigate to " + coinName,
+  //     {},
+  //     (res) => {
+  //       console.log(res);
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //     }
+  //   );
+  // });
 
   return (
     <View style={styles.container}>
