@@ -3,8 +3,9 @@ import { useGetTradingCoinsQuery } from "../api/api";
 import numeral from "numeral";
 import IconComponent from "./iconComponent";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
 
-export default function CoinCard({ coinName, pressable }) {
+function CoinCard({ coinName, pressable }) {
   const navigation = useNavigation();
   const { coinData } = useGetTradingCoinsQuery(undefined, {
     selectFromResult: ({ data }) => ({ coinData: data && data[coinName].cg }),
@@ -49,6 +50,7 @@ export default function CoinCard({ coinName, pressable }) {
     </Pressable>
   );
 }
+export default React.memo(CoinCard);
 
 function cText(str) {
   return (
