@@ -9,6 +9,8 @@ import CoinCard from "./coinCard";
 import { CandlestickChart } from "react-native-wagmi-charts";
 import { useGetChartDataQuery } from "../api/api";
 import { useState } from "react";
+import DateRangePicker from "./dateRangePicker";
+import { useCallback, useMemo } from "react";
 // import { useFocusEffect } from "@react-navigation/native";
 // import appsFlyer from "react-native-appsflyer";
 
@@ -46,27 +48,36 @@ function Chart({ coinName }) {
 
   const { width, height } = useWindowDimensions();
 
-  const { data, isLoading, error } = useGetChartDataQuery({
+  const { data, isLoading, isFetching, error } = useGetChartDataQuery({
     starttime,
     endtime,
     ticker: coinName,
   });
-  if (error) return null;
-  if (isLoading) return <ActivityIndicator style={styles.chart} />;
 
   // Вообще надо бы менять интервал, но кроме 1 часа я рабочих не нашел.
   // С данными на целый месяц все тормозит.
   var topPrice = 0;
   var minPrice = Infinity;
-  const chartData = Object.entries(data).map(([timestamp, item]) => {
-    topPrice = Math.max(topPrice, item.high);
-    minPrice = Math.min(minPrice, item.low);
-    return {
-      timestamp,
-      ...item,
-    };
-  });
+  const chartData = useMemo(() => {
+    if (!data) return [];
+    return Object.entries(data).map(([timestamp, item]) => {
+      topPrice = Math.max(topPrice, item.high);
+      minPrice = Math.min(minPrice, item.low);
+      return {
+        timestamp,
+        ...item,
+      };
+    });
+  }, [data]);
 
+  const onDateSelect = useCallback(({ startDate, endDate }) => {
+    setStarttime(new Date(startDate).getTime());
+    setEndtime(new Date(endDate).getTime());
+  }, []);
+
+  if (error) return null;
+  if (isLoading || isFetching)
+    return <ActivityIndicator style={styles.chart} />;
   if (!chartData || !chartData[0]) return <View style={styles.chart} />;
   return (
     <CandlestickChart.Provider data={chartData}>
@@ -86,12 +97,17 @@ function Chart({ coinName }) {
             { width: width - styles.priceLabelContainer.width },
           ]}
         >
-          <Text style={styles.label}>
+          {/* <Text style={styles.label}>
             {new Date(starttime).toLocaleDateString("ru-RU")}
           </Text>
           <Text style={styles.label}>
             {new Date(endtime).toLocaleDateString("ru-RU")}
-          </Text>
+          </Text> */}
+          <DateRangePicker
+            onSelect={onDateSelect}
+            startDate={new Date(starttime)}
+            endDate={new Date(endtime)}
+          />
         </View>
       </CandlestickChart>
     </CandlestickChart.Provider>
@@ -99,6 +115,7 @@ function Chart({ coinName }) {
 }
 
 const labelWidth = 50;
+const labelHeight = 30;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
@@ -109,7 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
-    height: 400 + labelWidth,
+    height: 400 + labelHeight,
     marginBottom: 15,
   },
   priceLabelContainer: {
@@ -123,7 +140,7 @@ const styles = StyleSheet.create({
   dateLabelContainer: {
     position: "absolute",
     bottom: 0,
-    height: labelWidth,
+    height: labelHeight,
     marginLeft: labelWidth,
     paddingHorizontal: 10,
     flexDirection: "row",
