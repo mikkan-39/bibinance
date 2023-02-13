@@ -10,7 +10,7 @@ import {
 import { useGetTradingCoinsQuery } from "../api/api";
 import IconComponent from "./iconComponent";
 
-function MiniCard({ coinName }) {
+export default function MiniCard({ coinName }) {
   const navigation = useNavigation();
   const { coinData } = useGetTradingCoinsQuery(undefined, {
     selectFromResult: ({ data }) => ({ coinData: data && data[coinName] }),
@@ -30,8 +30,6 @@ function MiniCard({ coinName }) {
     </Pressable>
   );
 }
-
-export default React.memo(MiniCard);
 
 function getPercent(data) {
   if (!data?.cg?.price?.USDT) return "~";

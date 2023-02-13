@@ -5,7 +5,7 @@ import IconComponent from "./iconComponent";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 
-function CoinCard({ coinName, pressable }) {
+export default function CoinCard({ coinName, pressable }) {
   const navigation = useNavigation();
   const { coinData } = useGetTradingCoinsQuery(undefined, {
     selectFromResult: ({ data }) => ({ coinData: data && data[coinName].cg }),
@@ -50,7 +50,6 @@ function CoinCard({ coinName, pressable }) {
     </Pressable>
   );
 }
-export default React.memo(CoinCard);
 
 function cText(str) {
   return (
